@@ -3,4 +3,6 @@ venv/
 
 # Ignore VS Code settings directory
 .vscode/
-# ./data
+data/
+
+notebooks/financial_analysis_sample.ipynb
