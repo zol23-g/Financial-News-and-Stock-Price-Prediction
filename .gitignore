@@ -4,5 +4,6 @@ venv/
 # Ignore VS Code settings directory
 .vscode/
 data/
+data/raw_analyst_ratings.csv
 
 # notebooks/financial_analysis_sample.ipynb
