@@ -5,4 +5,4 @@ venv/
 .vscode/
 data/
 
-notebooks/financial_analysis_sample.ipynb
+# notebooks/financial_analysis_sample.ipynb
