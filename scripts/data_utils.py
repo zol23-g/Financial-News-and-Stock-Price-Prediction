@@ -12,23 +12,6 @@ def load_data(filepath):
     print("Data loaded successfully.")
     return data
 
-def data_quality_check(data):
-    """
-    Perform basic data quality checks on the dataset.
-    """
-    # Checking for missing values
-    missing_values = data.isnull().sum()
-    print("Missing values in each column:\n", missing_values)
-    
-    # Checking for duplicates
-    duplicate_rows = data.duplicated().sum()
-    print(f"Number of duplicate rows: {duplicate_rows}")
-    
-    # Checking data types
-    print("Data types:\n", data.dtypes)
-    
-    return missing_values, duplicate_rows
-
 def process_stock_data(filepath):
     """
     Process the stock data by calculating technical indicators
@@ -53,9 +36,9 @@ def process_stock_data(filepath):
         df['Close'], fastperiod=12, slowperiod=26, signalperiod=9
     )
 
-    # Calculate financial metrics using PyNance
-    df['Daily_Returns'] = pn.data.Returns(df['Close']).daily()
-    df['Volatility'] = pn.data.Volatility(df['Close']).rolling(20)
+    # Calculate financial metrics using Pandas
+    df['Daily_Returns'] = df['Close'].pct_change()
+    df['Volatility'] = df['Daily_Returns'].rolling(window=20).std()
 
     # Visualize the results
     stock_name = os.path.basename(filepath).replace('.csv', '')
@@ -67,10 +50,10 @@ def visualize_data(df, stock_name):
     """
     Visualize the technical indicators and financial metrics.
     """
-    plt.figure(figsize=(14, 15))
+    plt.figure(figsize=(14, 10))
 
     # Plot Close Price with Moving Averages
-    plt.subplot(5, 1, 1)
+    plt.subplot(3, 1, 1)
     plt.plot(df['Close'], label=f'{stock_name} Close Price', color='black')
     plt.plot(df['SMA_20'], label='20-day SMA', color='blue')
     plt.plot(df['SMA_50'], label='50-day SMA', color='red')
@@ -79,7 +62,7 @@ def visualize_data(df, stock_name):
     plt.legend()
 
     # Plot RSI
-    plt.subplot(5, 1, 2)
+    plt.subplot(3, 1, 2)
     plt.plot(df['RSI_14'], label='14-day RSI', color='purple')
     plt.axhline(70, color='red', linestyle='--', label='Overbought')
     plt.axhline(30, color='green', linestyle='--', label='Oversold')
@@ -87,23 +70,11 @@ def visualize_data(df, stock_name):
     plt.legend()
 
     # Plot MACD
-    plt.subplot(5, 1, 3)
+    plt.subplot(3, 1, 3)
     plt.plot(df['MACD'], label='MACD', color='blue')
     plt.plot(df['MACD_Signal'], label='MACD Signal', color='red')
     plt.bar(df.index, df['MACD_Hist'], label='MACD Histogram', color='gray')
     plt.title(f'{stock_name} MACD')
-    plt.legend()
-
-    # Plot Daily Returns
-    plt.subplot(5, 1, 4)
-    plt.plot(df['Daily_Returns'], label='Daily Returns', color='orange')
-    plt.title(f'{stock_name} Daily Returns')
-    plt.legend()
-
-    # Plot Volatility
-    plt.subplot(5, 1, 5)
-    plt.plot(df['Volatility'], label='20-day Rolling Volatility', color='brown')
-    plt.title(f'{stock_name} 20-day Rolling Volatility')
     plt.legend()
 
     plt.tight_layout()
@@ -119,7 +90,7 @@ def process_all_stocks(data_dir):
             filepath = os.path.join(data_dir, filename)
             df = process_stock_data(filepath)
 
-            # Save the processed data with indicators
-            output_filepath = os.path.join(data_dir, f'processed_{filename}')
-            df.to_csv(output_filepath)
-            print(f'Saved processed data to {output_filepath}.\n')
+            # # Save the processed data with indicators
+            # output_filepath = os.path.join(data_dir, f'processed_{filename}')
+            # df.to_csv(output_filepath)
+            # print(f'Saved processed data to {output_filepath}.\n')
