@@ -9,3 +9,5 @@ streamlit
 gensim
 textblob
 pyLDAvis
+pynance
+ta-lib

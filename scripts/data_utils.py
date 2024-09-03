@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-import talib
+# import talib
 import pynance as pn
 import matplotlib.pyplot as plt
 
@@ -11,7 +11,22 @@ def load_data(filepath):
     data = pd.read_csv(filepath)
     print("Data loaded successfully.")
     return data
-
+def data_quality_check(data):
+    """
+    Perform basic data quality checks on the dataset.
+    """
+    # Checking for missing values
+    missing_values = data.isnull().sum()
+    print("Missing values in each column:\n", missing_values)
+    
+    # Checking for duplicates
+    duplicate_rows = data.duplicated().sum()
+    print(f"Number of duplicate rows: {duplicate_rows}")
+    
+    # Checking data types
+    print("Data types:\n", data.dtypes)
+    
+    return missing_values, duplicate_rows
 def process_stock_data(filepath):
     """
     Process the stock data by calculating technical indicators
